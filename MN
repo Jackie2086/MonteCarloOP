@@ -1,0 +1,64 @@
+import tensorflow as tf
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Parameters
+n = 2
+A0 = [100, 105]
+B0 = [100, 105]
+K = 1.0
+T = 1.0
+sigma = 0.3
+num_simulations = 100000
+
+mean = [0, 0]
+cov = [
+    [0.5, 0.5],
+    [0.5, 0.5]
+]
+
+# Simulate price paths
+def simulate_asset_prices(A0, B0):
+    data = np.random.multivariate_normal(mean, cov, num_simulations)
+    S = data[:, 0]
+    T = data[:, 1]
+    ST_A, ST_B = [], []
+
+    for i in range(n):
+        ST_A.append(A0[i] * tf.exp((r - 0.5 * sigma**2) * T + sigma * tf.sqrt(T) * S))
+        ST_B.append(B0[i] * tf.exp((r - 0.5 * sigma**2) * T + sigma * tf.sqrt(T) * S))
+
+    return ST_A, ST_B
+
+# Calculate European call option payoff
+def call_option_payoff(ST_A, ST_B):
+    minA = tf.reduce_min(ST_A, axis=0)
+    maxB = tf.reduce_max(ST_B, axis=0)
+    return tf.maximum(maxB - minA - K, 0.0)
+
+# Monte Carlo simulation to calculate option price
+def monte_carlo_call_option_price(A, B):
+    ST_A, ST_B = simulate_asset_prices(A, B)
+    payoffs = call_option_payoff(ST_A, ST_B)
+    call_price = tf.exp(-r * T) * tf.reduce_mean(payoffs)
+    return call_price, ST_A, ST_B
+
+# Calculate the baseline call option price
+call_price_base, simulated_prices_A, simulated_prices_B = monte_carlo_call_option_price(A0, B0)
+
+# Calculate Delta using automatic differentiation
+A_tf = [tf.Variable(tf.cast(a, tf.float32)) for a in A0]
+B_tf = [tf.Variable(tf.cast(b, tf.float32)) for b in B0]
+
+with tf.GradientTape() as tape:
+    ST_A_tf, ST_B_tf = simulate_asset_prices(A_tf, B_tf)
+    payoffs = call_option_payoff(ST_A_tf, ST_B_tf)
+    call_price = tf.exp(-r * T) * tf.reduce_mean(payoffs)
+
+delta = tape.gradient(call_price, A_tf + B_tf)
+
+# Output the option price and Delta
+print(f"The Monte Carlo estimated call option price is: {call_price_base.numpy()}")
+for i in range(n):
+    print(f"The Monte Carlo estimated Delta of the call option for A[{i}] is: {delta[i].numpy()}")
+    print(f"The Monte Carlo estimated Delta of the call option for B[{i}] is: {delta[n + i].numpy()}")
