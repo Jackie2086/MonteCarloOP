@@ -1,0 +1,57 @@
+import matplotlib.pyplot as plt
+import numpy as np
+
+# 创建示例数据
+data1 = [23, 45, 56, 78, 32, 49, 50, 60, 70, 90, 100, 110]
+data2 = [33, 55, 66, 88, 42, 59, 60, 70, 80, 100, 110, 120]
+
+# 计算增长率
+growth_rate = [(d2 - d1) / d1 * 100 if d1 != 0 else 0 for d1, d2 in zip(data1, data2)]
+
+# 设置X轴的标签
+labels = [f'Group {i+1}' for i in range(12)]
+
+x = np.arange(len(labels))  # X轴位置
+
+width = 0.35  # 柱状图的宽度
+
+fig, ax1 = plt.subplots(figsize=(12, 6))
+
+# 绘制柱状图
+rects1 = ax1.bar(x - width/2, data1, width, label='Data 1')
+rects2 = ax1.bar(x + width/2, data2, width, label='Data 2')
+
+# 添加一些文本标签
+ax1.set_ylabel('Values')
+ax1.set_title('Comparison of two datasets and growth rate')
+ax1.set_xticks(x)
+ax1.set_xticklabels(labels)
+ax1.legend(loc='upper left')
+
+# 自动标记每个柱子的高度
+def autolabel(rects, ax):
+    """在每个柱子顶部附上标签"""
+    for rect in rects:
+        height = rect.get_height()
+        ax.annotate('{}'.format(height),
+                    xy=(rect.get_x() + rect.get_width() / 2, height),
+                    xytext=(0, 3),  # 3 points vertical offset
+                    textcoords="offset points",
+                    ha='center', va='bottom')
+
+autolabel(rects1, ax1)
+autolabel(rects2, ax1)
+
+# 创建第二个y轴，用于绘制增长率曲线
+ax2 = ax1.twinx()
+ax2.set_ylabel('Growth Rate (%)')
+ax2.plot(x, growth_rate, color='red', marker='o', linestyle='dashed', label='Growth Rate')
+ax2.legend(loc='upper right')
+
+# 显示增长率的具体值
+for i, rate in enumerate(growth_rate):
+    ax2.annotate(f'{rate:.1f}%', xy=(i, rate), xytext=(5, 5), textcoords='offset points', color='red')
+
+fig.tight_layout()
+
+plt.show()
