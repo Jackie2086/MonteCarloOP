@@ -1,4 +1,17 @@
-# Combined bar chart with A and B bars next to each other with consistent colors for A1/B1, A2/B2, and A3/B3
+import matplotlib.pyplot as plt
+import numpy as np
+
+# Define data for 12 groups
+A_values = [
+    [12, 19, 3], [15, 25, 8], [9, 10, 5], [12, 19, 3], [15, 25, 8], [9, 10, 5],
+    [12, 19, 3], [15, 25, 8], [9, 10, 5], [12, 19, 3], [15, 25, 8], [9, 10, 5]
+]
+B_values = [
+    [5, 2, 3], [7, 4, 6], [2, 3, 1], [5, 2, 3], [7, 4, 6], [2, 3, 1],
+    [5, 2, 3], [7, 4, 6], [2, 3, 1], [5, 2, 3], [7, 4, 6], [2, 3, 1]
+]
+
+categories = [f'Group{i+1}' for i in range(12)]
 
 fig, ax = plt.subplots(figsize=(18, 8))
 
