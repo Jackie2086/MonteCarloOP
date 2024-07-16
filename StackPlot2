@@ -1,0 +1,69 @@
+import matplotlib.pyplot as plt
+import numpy as np
+
+# Example lists for A1-A3 and B1-B3
+A1 = [12, 19, 3, 15, 25, 8, 9, 10, 5, 12, 19, 3]
+A2 = [15, 25, 8, 12, 19, 3, 15, 25, 8, 9, 10, 5]
+A3 = [9, 10, 5, 12, 19, 3, 15, 25, 8, 12, 19, 3]
+B1 = [5, 2, 3, 7, 4, 6, 2, 3, 1, 5, 2, 3]
+B2 = [7, 4, 6, 5, 2, 3, 7, 4, 6, 2, 3, 1]
+B3 = [2, 3, 1, 5, 2, 3, 7, 4, 6, 2, 3, 1]
+
+# Combine them into 12 groups
+A_values = [[A1[i], A2[i], A3[i]] for i in range(len(A1))]
+B_values = [[B1[i], B2[i], B3[i]] for i in range(len(B1))]
+
+categories = [f'Group{i+1}' for i in range(len(A_values))]
+
+fig, ax = plt.subplots(figsize=(18, 8))
+
+barWidth = 0.4
+
+# Set position of bar on X axis
+r1 = np.arange(len(A_values))
+r2 = [x + barWidth for x in r1]
+
+# Use a colormap for automatic color selection
+cmap = plt.get_cmap("tab20c")
+colors = [cmap(i) for i in range(6)]
+
+# Make the plot for A
+bars_A1 = ax.bar(r1, [a[0] for a in A_values], color=colors[0], width=barWidth, edgecolor='grey', label='A1/B1')
+bars_A2 = ax.bar(r1, [a[1] for a in A_values], bottom=[a[0] for a in A_values], color=colors[1], width=barWidth, edgecolor='grey', label='A2/B2')
+bars_A3 = ax.bar(r1, [a[2] for a in A_values], bottom=[sum(a[:2]) for a in A_values], color=colors[2], width=barWidth, edgecolor='grey', label='A3/B3')
+
+# Make the plot for B
+bars_B1 = ax.bar(r2, [b[0] for b in B_values], color=colors[3], width=barWidth, edgecolor='grey', alpha=0.8, label='B1')
+bars_B2 = ax.bar(r2, [b[1] for b in B_values], bottom=[b[0] for b in B_values], color=colors[4], width=barWidth, edgecolor='grey', alpha=0.8, label='B2')
+bars_B3 = ax.bar(r2, [b[2] for b in B_values], bottom=[sum(b[:2]) for b in B_values], color=colors[5], width=barWidth, edgecolor='grey', alpha=0.8, label='B3')
+
+# Add data labels
+def add_labels(bars, values, offsets):
+    for bar, value, offset in zip(bars, values, offsets):
+        if value > 0:
+            height = bar.get_height()
+            ax.text(bar.get_x() + bar.get_width()/2.0, offset + height / 2.0, str(value), ha='center', va='center', color='black')
+
+add_labels(bars_A1, [a[0] for a in A_values], [0]*len(A_values))
+add_labels(bars_A2, [a[1] for a in A_values], [a[0] for a in A_values])
+add_labels(bars_A3, [a[2] for a in A_values], [sum(a[:2]) for a in A_values])
+
+add_labels(bars_B1, [b[0] for b in B_values], [0]*len(B_values))
+add_labels(bars_B2, [b[1] for b in B_values], [b[0] for b in B_values])
+add_labels(bars_B3, [b[2] for b in B_values], [sum(b[:2]) for b in B_values])
+
+# Add labels and title
+ax.set_xlabel('Groups', fontweight='bold')
+ax.set_ylabel('Values', fontweight='bold')
+ax.set_title('Stacked Bar Chart for A and B with Automatic Colors')
+
+# Add xticks on the middle of the group bars
+ax.set_xticks([r + barWidth / 2 for r in range(len(A_values))])
+ax.set_xticklabels(categories)
+
+# Create legend & Show graphic
+ax.legend(loc='upper left', bbox_to_anchor=(1, 1))
+plt.xticks(rotation=45)
+plt.tight_layout()
+plt.show()
+
