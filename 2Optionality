@@ -1,0 +1,76 @@
+The two slides outline the development of a more comprehensive pipeline valuation model by integrating switching optionality into the cash flow/payoff calculation.
+
+Current Model
+In the current model, the payoff is defined as:
+
+Payoff
+=
+max
+⁡
+(
+𝐵
+−
+𝐴
+,
+0.0
+)
+Payoff=max(B−A,0.0)
+Where:
+
+𝐴
+A represents the cost or price at the receiving site (TETCO ELA),
+𝐵
+B represents the price at the delivery site, chosen from one of the three options: Sonat (B1), Florida Gas Zone 3 (B2), or Transco Zone 4 (B3).
+However, this model fixes the choice of B based on the highest price from the delivery sites at a given point in the future, which means it does not fully capture the optionality available in real-world operations. Specifically, it neglects the flexibility to switch between delivery points dynamically, depending on price changes at different sites over time. This fixed choice limits the valuation since it doesn’t reflect the strategic flexibility the operator has to choose the optimal delivery site on an ongoing basis.
+
+New Model: Full Optionality Valuation
+The new model proposes a full optionality valuation, where both the receiving and delivery sites are optimized, and switching optionality is incorporated. The updated payoff formula is still:
+
+Payoff
+=
+max
+⁡
+(
+𝐵
+−
+𝐴
+,
+0.0
+)
+Payoff=max(B−A,0.0)
+But now, 
+𝐵
+B is defined as:
+
+𝐵
+=
+max
+⁡
+(
+𝐵
+1
+,
+𝐵
+2
+,
+𝐵
+3
+)
+B=max(B1,B2,B3)
+This means the operator has the option to select the best delivery site at each time step, dynamically switching between Sonat, Florida Gas Zone 3, and Transco Zone 4 based on real-time pricing. Additionally:
+
+𝐴
+A can now be optimized by selecting the best receiving site as well, further enhancing the flexibility in managing costs.
+The model reflects the real-world operational flexibility where the operator can adjust the flow between sites as prices fluctuate, thus fully capturing the option values.
+Enhanced Cash Flow/Payoff via Switching Optionality
+By integrating switching optionality, the new model reflects the strategic ability to maximize profits by:
+
+Optimizing delivery points based on evolving price scenarios at each delivery site.
+Managing risk through dynamic adjustments in operational decisions, which is crucial for hedging against volatile price movements.
+This enhanced model provides a more accurate reflection of potential cash flows and allows for better hedging strategies, leading to improved risk management and increased operational flexibility.
+
+
+
+
+
+
